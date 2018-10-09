@@ -23,28 +23,30 @@ namespace CPE200Lab1
 
         public string calculate(string oper)
         {
-            switch(oper)
-            {
-                case "+":
-                case "-":
-                case "X":
-                case "÷":
-                    return calculate(oper, firstOperand.ToString(), secondOperand.ToString());
-                case "%":
-                    if (firstOperand == 0)
+                string[] parts = oper.Split(' ');
+                try
+                {
+                    if (!(isNumber(parts[0]) && isOperator(parts[1]) && isNumber(parts[2])))
                     {
-                        return calculate(oper, secondOperand.ToString());
+                        return "E";
                     }
-                    else
+                    else if (parts.Length > 3)
                     {
-                        return calculate(oper, firstOperand.ToString(), secondOperand.ToString());
+                        if (parts[3] == "%")
+                        {
+                            parts[2] = calculate(parts[3], parts[0], parts[2]);
+                        }
+                        else
+                        {
+                            parts[2] = calculate(parts[3], parts[2]);
+                        }
                     }
-                case "√":
-                case "1/x":
-                    return calculate(oper, firstOperand.ToString());
+                }
+                catch (Exception e)
+                {
+                    return "E";
+                }
+                return calculate(parts[1], parts[0], parts[2], 4);
             }
-            return "E"; 
         }
-        
-    }
 }

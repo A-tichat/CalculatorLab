@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CPE200Lab1
 {
@@ -10,43 +7,46 @@ namespace CPE200Lab1
     {
         protected Stack<string> myStack = new Stack<string>();
 
-        public string Process(string oper)
+        public string calculate(string oper)
         {
             string secondOperand = null;
             string firstOperand = null;
             string[] parts = oper.Split(' ');
-            
-            for (int i = 0; i < parts.Length; i++)
+            if (parts.Length < 3)
             {
-                if (parts[i] == "")
+                return "E";
+            }
+            foreach (string token in parts)
+            {
+                if (token == "")
                 {
                     continue;
                 }
 
-                if (isNumber(parts[i]))
+                if (isNumber(token))
                 {
-                    myStack.Push(parts[i]);
+                    myStack.Push(token);
                 }
-                else if (isOperator(parts[i]))
+                else if (isOperator(token))
                 {
-                    if (parts[i] == "1/x" || parts[i] == "√")
+                    if (token == "1/x" || token == "√")
                     {
                         secondOperand = myStack.Pop();
-                        myStack.Push(calculate(parts[i], secondOperand));
+                        myStack.Push(calculate(token, secondOperand));
                         continue;
                     }
 
-                    if (parts[i] == "%")
+                    if (token == "%")
                     {
                         try
                         {
                             secondOperand = myStack.Pop();
                             firstOperand = myStack.Peek();
-                            myStack.Push(calculate(parts[i], firstOperand, secondOperand));
+                            myStack.Push(calculate(token, firstOperand, secondOperand));
                         }
                         catch
                         {
-                            myStack.Push(calculate(parts[i], "1", secondOperand));
+                            myStack.Push(calculate(token, "1", secondOperand));
                         }
 
                         continue;
@@ -55,7 +55,7 @@ namespace CPE200Lab1
                     {
                         secondOperand = myStack.Pop();
                         firstOperand = myStack.Pop();
-                        myStack.Push(calculate(parts[i], firstOperand, secondOperand));
+                        myStack.Push(calculate(token, firstOperand, secondOperand));
                     }
                     catch (Exception e)
                     {
