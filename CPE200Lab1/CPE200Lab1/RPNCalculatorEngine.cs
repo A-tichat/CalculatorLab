@@ -10,7 +10,7 @@ namespace CPE200Lab1
     {
         protected Stack<string> myStack = new Stack<string>();
 
-        public string calculate(string oper)
+        public string Process(string oper)
         {
             string secondOperand = null;
             string firstOperand = null;
@@ -69,7 +69,7 @@ namespace CPE200Lab1
                 return "E";
             }
 
-            return myStack.Peek();
+            return myStack.Pop();
         }
     }
 }

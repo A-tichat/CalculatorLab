@@ -66,6 +66,21 @@ namespace CPE200Lab1
                         return Convert.ToDouble(result.ToString("N" + remainLength)).ToString();
                     }
                     break;
+                case "%":
+                    {
+                        double result;
+                        string[] parts;
+                        int remainLength;
+
+                        result = (Convert.ToDouble(firstOperand) / 100);
+                        parts = result.ToString().Split('.');
+                        if (parts[0].Length > maxOutputSize)
+                        {
+                            return "E";
+                        }
+                        remainLength = maxOutputSize - parts[0].Length - 1;
+                        return Convert.ToDouble(result.ToString("N" + remainLength)).ToString();
+                    }
             }
             return "E";
         }

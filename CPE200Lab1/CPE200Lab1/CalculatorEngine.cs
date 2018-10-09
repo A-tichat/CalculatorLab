@@ -30,7 +30,18 @@ namespace CPE200Lab1
                 case "X":
                 case "÷":
                     return calculate(oper, firstOperand.ToString(), secondOperand.ToString());
-                
+                case "%":
+                    if (firstOperand == 0)
+                    {
+                        return calculate(oper, secondOperand.ToString());
+                    }
+                    else
+                    {
+                        return calculate(oper, firstOperand.ToString(), secondOperand.ToString());
+                    }
+                case "√":
+                case "1/x":
+                    return calculate(oper, firstOperand.ToString());
             }
             return "E"; 
         }
