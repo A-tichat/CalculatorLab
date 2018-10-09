@@ -6,72 +6,70 @@ using System.Threading.Tasks;
 
 namespace CPE200Lab1
 {
-    public class RPNCalculatorEngine : CalculatorEngine
+    public class RPNCalculatorEngine : TheCalculatorEngine
     {
-        public string Process(string str)
-        {
-            // your code here
-            Stack<string> number = new Stack<string>();
+        protected Stack<string> myStack = new Stack<string>();
 
+        public string calculate(string oper)
+        {
             string secondOperand = null;
             string firstOperand = null;
-            string answer = null;
-            string[] parts = str.Split(' ');
-
-            if (!(isNumber(parts[0]) && isNumber(parts[1])))
-            {
-                return "E";
-            }
-
+            string[] parts = oper.Split(' ');
+            
             for (int i = 0; i < parts.Length; i++)
             {
                 if (parts[i] == "")
                 {
                     continue;
                 }
-                
+
                 if (isNumber(parts[i]))
                 {
-                    number.Push(parts[i]);
+                    myStack.Push(parts[i]);
                 }
-               
-                else if(isOperator(parts[i]))
+                else if (isOperator(parts[i]))
                 {
-                    if (number.Count < 2)
+                    if (parts[i] == "1/x" || parts[i] == "√")
+                    {
+                        secondOperand = myStack.Pop();
+                        myStack.Push(calculate(parts[i], secondOperand));
+                        continue;
+                    }
+
+                    if (parts[i] == "%")
+                    {
+                        try
+                        {
+                            secondOperand = myStack.Pop();
+                            firstOperand = myStack.Peek();
+                            myStack.Push(calculate(parts[i], firstOperand, secondOperand));
+                        }
+                        catch
+                        {
+                            myStack.Push(calculate(parts[i], "1", secondOperand));
+                        }
+
+                        continue;
+                    }
+                    try
+                    {
+                        secondOperand = myStack.Pop();
+                        firstOperand = myStack.Pop();
+                        myStack.Push(calculate(parts[i], firstOperand, secondOperand));
+                    }
+                    catch (Exception e)
                     {
                         return "E";
                     }
-                    if (parts[i] == "1/x" || parts[i] == "√")
-                    {
-                        secondOperand = number.Pop();
-                        number.Push(unaryCalculate(parts[i], secondOperand));
-                        continue;
-                    }
-                    if (parts[i] == "%")
-                    {
-                        secondOperand = number.Pop();
-                        firstOperand = number.Peek();
-                        number.Push(calculate(parts[i], firstOperand, secondOperand));
-                        continue;
-                    }
-                        secondOperand = number.Pop();
-                        firstOperand = number.Pop();
-                        answer = calculate(parts[i], firstOperand, secondOperand);
-                        number.Push(answer);
-                    
-                }
-                else
-                {
-                    return "E";
                 }
             }
 
-            if (number.Count != 1)
+            if (myStack.Count != 1)
             {
                 return "E";
             }
 
-            return answer;
+            return myStack.Peek();
         }
     }
 }

@@ -21,7 +21,6 @@ namespace CPE200Lab1
         private string operate0;
         private double memory;
         private CalculatorEngine engine;
-        private RPNCalculatorEngine rpnEngine;
 
         private void resetAll()
         {
@@ -38,7 +37,6 @@ namespace CPE200Lab1
             InitializeComponent();
             memory = 0;
             engine = new CalculatorEngine();
-            rpnEngine = new RPNCalculatorEngine();
             resetAll();
         }
 
@@ -75,7 +73,7 @@ namespace CPE200Lab1
             }
             operate = ((Button)sender).Text;
             firstOperand = lblDisplay.Text;
-            string result = engine.unaryCalculate(operate, firstOperand);
+            string result = engine.calculate(operate, firstOperand);
             if (result is "E" || result.Length > 8)
             {
                 lblDisplay.Text = "Error";
@@ -138,16 +136,8 @@ namespace CPE200Lab1
             {
                 return;
             }
-            string result = null;
-            string[] parts = lblDisplay.Text.Split(' ');
-            if (engine.isOperator(parts[1]))
-            {
-                result = engine.Process(lblDisplay.Text);
-            }
-            else
-            {
-                result = rpnEngine.Process(lblDisplay.Text);
-            }
+            string result = engine.calculate(operate);
+
             //string secondOperand = lblDisplay.Text;
             if (result is "E" || result.Length > 8)
             {
